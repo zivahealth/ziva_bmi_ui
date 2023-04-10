@@ -33,7 +33,7 @@ const LoginFormSchema = Yup.object().shape({
 // weight_kg, height_cm, sex_num, age_yrs, waist_circum_cm
 // weight_lbs, height_in, sex_num, age_yrs, waist_circum_in
 export const BMI = () => {
-  const [response, setResponse] = useState({});
+  const [response, setResponse] = useState<any>({});
   const [metric_system, setMetricSystem] = useState("metric");
 
   const [bmiCount, setBMICount] = useState(0);
