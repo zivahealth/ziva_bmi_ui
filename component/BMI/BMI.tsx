@@ -20,7 +20,7 @@ const LoginFormSchema = Yup.object().shape({
   weight_kg: Yup.string().required("Please enter the weight."),
   height_ft: Yup.string().required("Please enter the height in feet."),
   sex_num: Yup.number().required("Select gender."),
-  waist_circum_cm: Yup.number().required("Enter waist_circum_cm."),
+  waist_circum_in: Yup.number().required("Enter waist_circum_in."),
   age: Yup.number().required("Please enter the age."),
 });
 // metric_system: "",
@@ -49,8 +49,7 @@ export const BMI = () => {
     });
     form.append(`height_in`, `${height_in}`);
     form.append(`metric_system`, `${metric_system}`);
-    // const URL = `http://localhost/bmi`;
-    const URL = `https://ziva-bmi.pacewisdom.in/bmi`;
+    const URL = location.host === 'localhost:3000' ? `http://localhost/bmi` : `https://ziva-bmi.pacewisdom.in/bmi`;
     axios
       .post(URL, form)
       .then((res) => {
@@ -109,7 +108,7 @@ export const BMI = () => {
                         weight_kg: 0,
                         height_ft: 0,
                         sex_num: 1,
-                        waist_circum_cm: 0,
+                        waist_circum_in: 0,
                         age: 0,
                       }}
                       validationSchema={LoginFormSchema}
@@ -183,6 +182,18 @@ export const BMI = () => {
                               label="Height ex(5'0)"
                               type={"text"}
                               placeholder="Enter Height in meeter"
+                              errors={errors}
+                              values={values}
+                              touched={touched}
+                              handleChange={handleChange}
+                            ></InputField>
+                          </div>
+                          <div className="form-group">
+                            <InputField
+                              name="waist_circum_in"
+                              label="Waist Circum In"
+                              type={"text"}
+                              placeholder="Enter Waist Circum in Inch"
                               errors={errors}
                               values={values}
                               touched={touched}
