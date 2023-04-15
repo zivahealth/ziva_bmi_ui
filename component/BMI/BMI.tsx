@@ -34,7 +34,7 @@ const LoginFormSchema = Yup.object().shape({
 // weight_lbs, height_in, sex_num, age_yrs, waist_circum_in
 export const BMI = () => {
   const [response, setResponse] = useState<any>({});
-  const [metric_system, setMetricSystem] = useState("metric");
+  const [metric_system, setMetricSystem] = useState("imperial");
 
   const [bmiCount, setBMICount] = useState(0);
 
@@ -119,13 +119,7 @@ export const BMI = () => {
                     </div>
                   </div>
                   <div className="p-2">
-                    <pre>{JSON.stringify(response, null, 4)}</pre>
-                    metric_system: Annotated[str, Form()], age_yrs:
-                    Annotated[int, Form()], sex_num: Annotated[int, Form()],
-                    height_in: Annotated[int, Form()], weight_lbs:
-                    Annotated[float, Form()], waist_circum_in: Annotated[int,
-                    Form()],
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                       <div className="form-group">
                         <span className="mb-2 d-block">Metric System</span>
                         <select
@@ -140,7 +134,7 @@ export const BMI = () => {
                           <option value={`imperial`}>Imperial</option>
                         </select>
                       </div>
-                    </div>
+                    </div> */}
                     <Formik
                       initialValues={{
                         weight_lbs: 140,
@@ -165,7 +159,6 @@ export const BMI = () => {
                         submitForm,
                       }) => (
                         <Form>
-                          {/* <pre>{JSON.stringify(values, null, 4)}</pre> */}
                           <div className="mb-3">
                             <div className="form-group">
                               <InputField
