@@ -17,11 +17,11 @@ import axios from "axios";
 // import "./style"
 
 const LoginFormSchema = Yup.object().shape({
-  weight_kg: Yup.string().required("Please enter the weight."),
+  weight_lbs: Yup.string().required("Please enter the weight."),
   height_ft: Yup.string().required("Please enter the height in feet."),
   sex_num: Yup.number().required("Select gender."),
   waist_circum_in: Yup.number().required("Enter waist_circum_in."),
-  age: Yup.number().required("Please enter the age."),
+  age_yrs: Yup.number().required("Please enter the age."),
 });
 // metric_system: "",
 // weight_kg: 0,
@@ -49,7 +49,11 @@ export const BMI = () => {
     });
     form.append(`height_in`, `${height_in}`);
     form.append(`metric_system`, `${metric_system}`);
-    const URL = location.host === 'localhost:3000' ? `http://localhost/bmi` : `https://ziva-bmi.pacewisdom.in/bmi`;
+    let subURL = metric_system === "imperial" ? `imperial_bmi` : "metric_bmi";
+    const URL =
+      location.host === "localhost:3000"
+        ? `http://localhost/${subURL}`
+        : `https://ziva-bmi.pacewisdom.in/${subURL}`;
     axios
       .post(URL, form)
       .then((res) => {
@@ -100,16 +104,50 @@ export const BMI = () => {
                       </div>
                     </Link>
                   </div>
+                  <div className="mb-3">
+                    <div className="form-group h5">
+                      Health Score(%) = {response?.health_score_per}%
+                    </div>
+                    <div className="form-group h5">
+                      Body Fat Pred(%) = {response?.body_fat_pred_per}%
+                    </div>
+                    <div className="form-group h5">
+                      Feedback = {response?.grade_feedback}
+                    </div>
+                    <div className="form-group h5">
+                      Note = {response?.output}
+                    </div>
+                  </div>
                   <div className="p-2">
-                    {/* {JSON.stringify(response, null, 4)} */}
-
+                    <pre>{JSON.stringify(response, null, 4)}</pre>
+                    metric_system: Annotated[str, Form()], age_yrs:
+                    Annotated[int, Form()], sex_num: Annotated[int, Form()],
+                    height_in: Annotated[int, Form()], weight_lbs:
+                    Annotated[float, Form()], waist_circum_in: Annotated[int,
+                    Form()],
+                    <div className="mb-3">
+                      <div className="form-group">
+                        <span className="mb-2 d-block">Metric System</span>
+                        <select
+                          name={`metric_system`}
+                          value={metric_system}
+                          onChange={(event) => {
+                            console.log(event.currentTarget.value);
+                            setMetricSystem(event.currentTarget.value);
+                          }}
+                        >
+                          <option value={`metric`}>Metric</option>
+                          <option value={`imperial`}>Imperial</option>
+                        </select>
+                      </div>
+                    </div>
                     <Formik
                       initialValues={{
-                        weight_kg: 0,
-                        height_ft: 0,
-                        sex_num: 1,
-                        waist_circum_in: 0,
-                        age: 0,
+                        weight_lbs: 140,
+                        height_ft: "6'0",
+                        sex_num: 0,
+                        waist_circum_in: 28,
+                        age_yrs: 25,
                       }}
                       validationSchema={LoginFormSchema}
                       validateOnChange={true}
@@ -127,45 +165,13 @@ export const BMI = () => {
                         submitForm,
                       }) => (
                         <Form>
-                          <div className="mb-3">
-                            <div className="form-group h5">
-                              Health Score(%) = {response?.health_score_per}%
-                            </div>
-                            <div className="form-group h5">
-                              Body Fat Pred(%) = {response?.body_fat_pred_per}%
-                            </div>
-                            <div className="form-group h5">
-                              Feedback = {response?.grade_feedback}
-                            </div>
-                            <div className="form-group h5">
-                              Note = {response?.output}
-                            </div>
-                          </div>
-                          <div className="mb-3">
-                            <div className="form-group">
-                              <span className="mb-2 d-block">
-                                Metric System
-                              </span>
-                              <select
-                                name={`metric_system`}
-                                value={metric_system}
-                                onChange={(event) => {
-                                  console.log(event.currentTarget.value);
-                                  setMetricSystem(event.currentTarget.value);
-                                }}
-                              >
-                                <option value={`metric`}>Metric</option>
-                                <option value={`imperial`}>Imperial</option>
-                              </select>
-                            </div>
-                          </div>
                           {/* <pre>{JSON.stringify(values, null, 4)}</pre> */}
                           <div className="mb-3">
                             <div className="form-group">
                               <InputField
-                                name="weight_kg"
-                                label="Weight(Kg)"
-                                placeholder="Enter Weight in Kg"
+                                name="weight_lbs"
+                                label="Weight(LBS)"
+                                placeholder="Enter Weight in lbs"
                                 type="number"
                                 data-id="weight"
                                 errors={errors}
@@ -191,7 +197,7 @@ export const BMI = () => {
                           <div className="form-group">
                             <InputField
                               name="waist_circum_in"
-                              label="Waist Circum In"
+                              label="Waist Circum(Inch)"
                               type={"text"}
                               placeholder="Enter Waist Circum in Inch"
                               errors={errors}
@@ -202,7 +208,7 @@ export const BMI = () => {
                           </div>
                           <div className="form-group">
                             <InputField
-                              name="age"
+                              name="age_yrs"
                               label="Age"
                               type={"number"}
                               placeholder="Enter Age"
@@ -245,15 +251,6 @@ export const BMI = () => {
                               Calculate
                             </button>
                           </div>
-
-                          {/* <div className="mt-4 text-center">
-                            <Link href="/forgot-password">
-                              <div className="text-muted">
-                                <i className="mdi mdi-lock me-1" />
-                                Forgot your password?
-                              </div>
-                            </Link>
-                          </div> */}
                         </Form>
                       )}
                     </Formik>
