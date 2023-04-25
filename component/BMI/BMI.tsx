@@ -35,15 +35,31 @@ const LoginFormSchema = Yup.object().shape({
 export const BMI = () => {
   const [response, setResponse] = useState<any>({});
   const [metric_system, setMetricSystem] = useState("imperial");
+  const [bmi, setBMI] = useState({ count: 0, message: `` });
 
-  const [bmiCount, setBMICount] = useState(0);
-
+  const getBMICount = (heightInch: number, weightLBS: number) => {
+    console.log(`weightLBS ,heightInch: `, weightLBS, heightInch);
+    const count = (weightLBS / (heightInch * heightInch)) * 703;
+    let message = ``;
+    if (count < 18.5) {
+      message = `Under weight`;
+    } else if (count <= 24.9) {
+      message = `Normal`;
+    } else if (count <= 29.9) {
+      message = `Overweight`;
+    } else {
+      message = `Obese`;
+    }
+    return { count, message };
+  };
   const updateBMI = (values: any) => {
     let [heightFeet, heightInch] = values.height_ft.split(`'`);
     heightInch = heightInch ? parseInt(heightInch) : 0;
     heightFeet = heightFeet ? parseInt(heightFeet) : 0;
     const height_in = parseFloat(heightFeet) * 12 + parseFloat(heightInch);
     const form = new FormData();
+    const bmi = getBMICount(height_in, values.weight_lbs);
+    setBMI(bmi);
     Object.keys(values).forEach((item) => {
       form.append(item, values[item]);
     });
@@ -59,7 +75,6 @@ export const BMI = () => {
       .then((res) => {
         console.log(`response: `, res.data);
         setResponse(res.data.bmi);
-        setBMICount(res?.data?.bmi?.health_score_per);
         ToastUtil.info(`Health Score: ${res?.data?.bmi?.health_score_per}%`);
       })
       .catch((err) => {});
@@ -116,6 +131,9 @@ export const BMI = () => {
                     </div>
                     <div className="form-group h5">
                       Note = {response?.output}
+                    </div>
+                    <div className="form-group h5">
+                      BMI ={bmi.count} ({bmi.message})
                     </div>
                   </div>
                   <div className="p-2">
