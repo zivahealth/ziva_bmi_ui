@@ -18,7 +18,7 @@ import axios from "axios";
 
 const LoginFormSchema = Yup.object().shape({
   weight_lbs: Yup.string().required("Please enter the weight."),
-  body_fat_pred: Yup.number().required("Please enter the Body Fat(%)."),
+  body_fat_pred: Yup.string().required("Please enter the Body Fat(%)."),
   height_ft: Yup.string().required("Please enter the height in feet."),
   sex_num: Yup.number().required("Select gender."),
   waist_circum_in: Yup.number().required("Enter waist_circum_in."),
@@ -159,7 +159,7 @@ export const BMI = () => {
                         weight_lbs: 140,
                         height_ft: "6'0",
                         sex_num: 0,
-                        body_fat_pred: 0,
+                        body_fat_pred: "0",
                         waist_circum_in: 28,
                         age_yrs: 25,
                       }}
@@ -223,7 +223,7 @@ export const BMI = () => {
                             <InputField
                               name="body_fat_pred"
                               label="Body Fat(%)"
-                              type={"number"}
+                              type={"text"}
                               placeholder="Enter Body Fat Percentage"
                               errors={errors}
                               values={values}
