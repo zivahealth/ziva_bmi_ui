@@ -53,6 +53,26 @@ export const BMI = () => {
     }
     return { count, message };
   };
+
+  const getFemaleBodyFatPer = (zivaBodyFatPercentage: number, bmi: number) => {
+    let score = bmi;
+
+    const bmi25 = (25 / 100) * bmi + bmi;
+    const bmiFinal = bmi + bmi25;
+    if (zivaBodyFatPercentage < bmi) {
+      return zivaBodyFatPercentage.toFixed(2);
+    } else {
+      if (zivaBodyFatPercentage > bmiFinal) {
+        return (zivaBodyFatPercentage - zivaBodyFatPercentage * 0.25).toFixed(
+          2
+        );
+      } else {
+        return (zivaBodyFatPercentage - zivaBodyFatPercentage * 0.15).toFixed(
+          2
+        );
+      }
+    }
+  };
   const updateBMI = (values: any) => {
     let [heightFeet, heightInch] = values.height_ft.split(`'`);
     heightInch = heightInch ? parseInt(heightInch) : 0;
@@ -125,7 +145,12 @@ export const BMI = () => {
                       Health Score(%) = {response?.health_score_per}%
                     </div>
                     <div className="form-group h5">
-                      Body Fat Pred(%) = {response?.body_fat_pred_per}%
+                      Body Fat Pred(%) ={" "}
+                      {getFemaleBodyFatPer(
+                        response?.body_fat_pred_per,
+                        bmi.count
+                      )}
+                      %
                     </div>
                     <div className="form-group h5">
                       Feedback = {response?.grade_feedback}
@@ -136,6 +161,13 @@ export const BMI = () => {
                     <div className="form-group h5">
                       BMI ={bmi.count} ({bmi.message})
                     </div>
+                    {/* <div className="form-group h5">
+                      BMI2 =
+                      {getFemaleBodyFatPer(
+                        response?.body_fat_pred_per,
+                        bmi.count
+                      )}
+                    </div> */}
                   </div>
                   <div className="p-2">
                     {/* <div className="mb-3">
