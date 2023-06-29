@@ -155,11 +155,11 @@ export const BMI = () => {
                     <div className="form-group h5">
                       Feedback = {response?.grade_feedback}
                     </div>
-                    <div className="form-group h5">
+                    {/* <div className="form-group h5">
                       Note = {response?.output}
-                    </div>
+                    </div> */}
                     <div className="form-group h5">
-                      BMI ={bmi.count} ({bmi.message})
+                      BMI ={bmi.count?.toFixed(2)} ({bmi.message})
                     </div>
                     {/* <div className="form-group h5">
                       BMI2 =
